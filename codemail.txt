@@ -1,0 +1,39 @@
+
+	require_once('phpmailler/class.phpmailer.php');
+	$sql="SELECT Email FROM khachhang WHERE MaKH=1";
+	$query_run1 = mysqli_query($connection, $sql);
+	$mailday="";
+	while ($row = mysqli_fetch_assoc($query_run1)) {
+        require_once('phpmailler/class.phpmailer.php');
+	
+        //Khởi tạo đối tượng
+        $mail = new PHPMailer();
+        $mail->IsSMTP(); // Gọi đến class xử lý SMTP
+        $mail->Host       = "smtp.gmail.com"; // tên SMTP server
+        $mail->SMTPAuth   = true;                  // Sử dụng đăng nhập vào account
+        $mail->SMTPSecure = "ssl";
+        $mail->Host       = "smtp.gmail.com";     // Thiết lập thông tin của SMPT
+        $mail->Port       = 465;                     // Thiết lập cổng gửi email của máy
+        $mail->Username   = "huy240298@gmail.com"; // SMTP account username
+        $mail->Password   = "hue240298";            // SMTP account password
+        //Thiet lap thong tin nguoi gui va email nguoi gui
+        $mail->SetFrom('huy240298@gmail.com','Travello');
+        //Thiết lập thông tin người nhận
+        $mail->AddAddress($row['Email'], "Khách hàng");
+        //Thiết lập email nhận email hồi đáp
+        //nếu người nhận nhấn nút Reply
+        $mail->AddReplyTo("huy240298@gmail.com","Travello");
+        $mail->Subject    = "Travello";
+        //Thiết lập định dạng font chữ
+        $mail->CharSet = "utf-8";
+        //Thiết lập nội dung chính của email
+        $body = "Chào";
+        $mail->Body = "Đây là website du lịch Travllo, cảm ơn bạn đã đăng ký tour.<br> Bạn Vui lòng đăng nhập để kiểm tra thông tin đã đăng ký";
+        
+        if($mail->Send()) {
+            echo "<div class='alert alert-success'>Đặt hàng thành công.</div>"; 
+        
+        } 
+        else
+        echo "<div class='alert alert-success'>Đặt hàng thất bại.</div>"; 
+	}
